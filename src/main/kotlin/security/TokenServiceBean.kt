@@ -60,6 +60,8 @@ class TokenServiceBean {
         if (!fromEnv.isNullOrEmpty()) return fromEnv
 
         return "DEV_ONLY_CHANGE_ME"
+        /* TODO("После тестов надо поменять на строку ниже, чтобы всегда запрашивал secret") */
+        // throw IllegalStateException("APP_TOKEN_SECRET is not configured")
     }
 
     private fun constantTimeEquals(a: String, b: String): Boolean {

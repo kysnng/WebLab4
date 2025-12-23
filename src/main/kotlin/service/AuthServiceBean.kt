@@ -63,12 +63,12 @@ class AuthServiceBean {
         }
 
         val user = users.findByUsername(username)
-            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Invalid credentials")
+            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Invalid username")
 
         val computed = PasswordHasher.hashWithSalt(password, user.salt)
 
         if (computed != user.passwordHash) {
-            throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Invalid credentials")
+            throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Invalid password")
         }
 
         val token = tokens.issue(user.id!!, user.username)

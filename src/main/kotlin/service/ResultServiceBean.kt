@@ -60,7 +60,7 @@ class ResultServiceBean {
 
 
     private fun validate(req: CheckRequestDto) {
-        if (req.r <= 0.0) throw IllegalArgumentException("R must be > 0")
+        if (req.r <= -4.0) throw IllegalArgumentException("R must be > -4")
         if (req.x.isNaN() || req.y.isNaN() || req.r.isNaN()) throw IllegalArgumentException("Invalid numbers")
         if (req.x.isInfinite() || req.y.isInfinite() || req.r.isInfinite()) throw IllegalArgumentException("Invalid numbers")
     }
