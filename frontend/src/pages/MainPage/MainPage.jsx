@@ -1,19 +1,29 @@
 import React from "react";
+import Header from "../../components/Header/Header";
+import GraphCanvas from "../../components/GraphCanvas/GraphCanvas";
+import ParamsForm from "../../components/ParamsForm/ParamsForm";
+import ResultsTable from "../../components/ResultsTable/ResultsTable";
 
 export default function MainPage() {
     return (
         <div className="container">
-            <header className="header">
-                <h1 className="header__title">Лабораторная работа 2</h1>
-                <p className="header__meta">
-                    <span><strong>ФИО:</strong> Соловьев Даниил Дмитриевич</span>
-                    <span><strong>Группа:</strong> Р3222</span>
-                    <span><strong>ИСУ:</strong> 467550</span>
-                </p>
-            </header>
+            <Header />
 
-            <section className="card">
-                <h2 className="card__title">Основная</h2>
+            <main className="grid">
+                <section className="card">
+                    <h2 className="card__title">График</h2>
+                    <GraphCanvas />
+                </section>
+
+                <section className="card">
+                    <h2 className="card__title">Параметры</h2>
+                    <ParamsForm />
+                </section>
+            </main>
+
+            <section className="card" style={{ marginTop: "24px" }}>
+                <h2 className="card__title">Результаты</h2>
+                <ResultsTable />
             </section>
         </div>
     );

@@ -1,3 +1,4 @@
+import org.gradle.internal.os.OperatingSystem
 plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.allopen") version "1.9.22"
@@ -48,6 +49,21 @@ tasks.war {
     archiveFileName.set("webLab4.war")
 }
 
+tasks.register<Exec>("npmInstall") {
+    workingDir = frontendDir
+    commandLine = npmCommand("install")
+}
+
+tasks.register<Exec>("npmBuild") {
+    workingDir = frontendDir
+    commandLine = npmCommand("run", "build")
+    dependsOn("npmInstall")
+}
+
+tasks.named("war") {
+    dependsOn("npmBuild")
+}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
@@ -57,3 +73,11 @@ java {
 kotlin {
     jvmToolchain(17)
 }
+
+val frontendDir = file("frontend")
+
+fun npmCommand(vararg args: String): List<String> {
+    val os = OperatingSystem.current()
+    return if (os.isWindows) listOf("cmd", "/c", "npm", *args) else listOf("npm", *args)
+}
+
