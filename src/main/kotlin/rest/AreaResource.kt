@@ -10,6 +10,7 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.core.MediaType
 import service.ResultServiceBean
+import jakarta.ws.rs.core.Context
 
 @Path("/area")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -21,7 +22,7 @@ class AreaResource {
 
     @POST
     @Path("/check")
-    fun check(req: CheckRequestDto, ctx: ContainerRequestContext): ResultDto {
+    fun check(req: CheckRequestDto, @Context ctx: ContainerRequestContext): ResultDto {
         val userId = (ctx.getProperty("userId") as? Long) ?: throw IllegalStateException("No userId in context")
         return service.checkAndSave(userId, req)
     }

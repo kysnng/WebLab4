@@ -1,4 +1,5 @@
 import { httpRequest } from "./httpClient";
+import { API_BASE } from "../api/config";
 
 export function login(username, password) {
     return httpRequest("/auth/login", {

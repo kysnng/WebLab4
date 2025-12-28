@@ -10,6 +10,7 @@ import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import service.ResultServiceBean
+import jakarta.ws.rs.core.Context
 
 @Path("/results")
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,13 +20,13 @@ class ResultsResource {
     private lateinit var service: ResultServiceBean
 
     @GET
-    fun list(ctx: ContainerRequestContext): List<ResultDto> {
+    fun list(@Context ctx: ContainerRequestContext): List<ResultDto> {
         val userId = (ctx.getProperty("userId") as? Long) ?: throw IllegalStateException("No userId in context")
         return service.listForUser(userId)
     }
 
     @DELETE
-    fun clear(ctx: ContainerRequestContext): Response {
+    fun clear(@Context ctx: ContainerRequestContext): Response {
         val userId = (ctx.getProperty("userId") as? Long) ?: throw IllegalStateException("No userId in context")
         service.clearForUser(userId)
         return Response.noContent().build()

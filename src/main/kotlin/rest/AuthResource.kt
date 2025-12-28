@@ -14,6 +14,7 @@ import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import service.AuthServiceBean
+import jakarta.ws.rs.core.Context
 
 @Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -39,7 +40,7 @@ class AuthResource {
 
     @GET
     @Path("/me")
-    fun me(ctx: ContainerRequestContext): MeResponseDto {
+    fun me(@Context ctx: ContainerRequestContext): MeResponseDto {
         val userId = (ctx.getProperty("userId") as? Long) ?: throw IllegalStateException("No userId in context")
         val username = (ctx.getProperty("username") as? String) ?: throw IllegalStateException("No username in context")
         return auth.me(userId, username)

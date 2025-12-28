@@ -1,10 +1,7 @@
-const contextRoot = (() => {
-    const p = window.location.pathname || "/";
-    const parts = p.split("/").filter(Boolean);
-    return parts.length ? `/${parts[0]}` : "";
-})();
+import { API_BASE } from "../api/config";
+import { contextRoot } from "./config";
 
-const API_BASE = `${contextRoot}/api`;
+
 
 export async function httpRequest(url, options = {}, token = null) {
     const headers = {
