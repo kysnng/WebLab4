@@ -19,16 +19,17 @@ export function validateParams({ x, y, r }) {
     if (x === "" || x === null || typeof x === "undefined") errors.x = "Выбери X";
     else {
         const xn = Number(x);
-        if (!Number.isFinite(xn) || xn < -5 || xn > 5) errors.x = "Некорректный X";
+        if (!Number.isFinite(xn) || !Number.isInteger(xn) || xn < -4 || xn > 4) errors.x = "X должен быть целым от -4 до 4";
     }
 
-    const yRes = parseWithScaleLimit(y, { min: -5, max: 5, maxScale: 3 });
+    const yRes = parseWithScaleLimit(y, { min: -3, max: 5, maxScale: 3 });
     if (!yRes.ok) errors.y = yRes.error;
 
-    if (!r) errors.r = "Выбери R";
+    if (r === "" || r === null || typeof r === "undefined") errors.r = "Выбери R";
     else {
-        const rRes = parseWithScaleLimit(r, { min: 1, max: 3, maxScale: 3 });
-        if (!rRes.ok) errors.r = rRes.error;
+        const rn = Number(String(r).replace(",", "."));
+        if (!Number.isFinite(rn) || !Number.isInteger(rn) || rn < -4 || rn > 4) errors.r = "R должен быть целым от -4 до 4";
+        else if (rn === 0) errors.r = "R не может быть 0";
     }
 
     const ok = !errors.x && !errors.y && !errors.r;
@@ -39,7 +40,7 @@ export function validateParams({ x, y, r }) {
         values: {
             x: Number(x),
             y: yRes.ok ? yRes.value : null,
-            r: r ? Number(String(r).replace(",", ".")) : null
+            r: r !== "" ? Number(String(r).replace(",", ".")) : null
         }
     };
 }

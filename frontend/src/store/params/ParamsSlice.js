@@ -5,7 +5,7 @@ const slice = createSlice({
     initialState: {
         x: "",
         y: "",
-        r: ""
+        r: "1"
     },
     reducers: {
         setX(state, action) {
@@ -20,7 +20,7 @@ const slice = createSlice({
         resetParams(state) {
             state.x = "";
             state.y = "";
-            state.r = "";
+            state.r = "1";
         }
     }
 });

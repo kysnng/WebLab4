@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setX, setY, setR } from "../../store/params/paramsSlice";
+import { setX, setY, setR } from "../../store/params/ParamsSlice";
 import { sendPointThunk } from "../../store/results/resultsThunks";
 import { validateParams } from "../../utils/validators";
 
@@ -29,6 +29,19 @@ export default function ParamsForm() {
         } catch (_) {}
     }
 
+    function onYChange(e) {
+        const raw = e.target.value;
+
+        if (raw === "" || raw === "-" || raw === "." || raw === "-." || raw === "," || raw === "-,") {
+            dispatch(setY(raw));
+            return;
+        }
+
+        if (!/^-?\d+(?:[.,]\d{0,3})?$/.test(raw)) return;
+
+        dispatch(setY(raw));
+    }
+
     const errStyle = { borderColor: "#f44336", boxShadow: "0 0 0 3px rgba(244,67,54,.18)" };
     const hintStyle = { fontSize: "12px", marginTop: "6px" };
 
@@ -37,10 +50,8 @@ export default function ParamsForm() {
             <div className="field">
                 <label className="label">Координата X:</label>
                 <select
-                    id="x-select"
-                    className="x-row"
+                    className="select"
                     name="x"
-                    aria-label="Выбор X"
                     required
                     value={x}
                     style={showX ? errStyle : undefined}
@@ -50,66 +61,57 @@ export default function ParamsForm() {
                     <option value="" disabled>
                         Выбери X
                     </option>
-                    <option value="-2">-2</option>
-                    <option value="-1.5">-1.5</option>
-                    <option value="-1">-1</option>
-                    <option value="-0.5">-0.5</option>
-                    <option value="0">0</option>
-                    <option value="0.5">0.5</option>
-                    <option value="1">1</option>
-                    <option value="1.5">1.5</option>
-                    <option value="2">2</option>
+                    {Array.from({ length: 9 }, (_, i) => i - 4).map((v) => (
+                        <option key={v} value={String(v)}>
+                            {v}
+                        </option>
+                    ))}
                 </select>
                 {showX ? <div style={hintStyle}>{errors.x}</div> : null}
             </div>
 
             <div className="field">
-                <label htmlFor="y" className="label">Координата Y:</label>
+                <label className="label">Координата Y:</label>
                 <input
-                    id="y"
                     name="y"
                     className="input"
                     type="text"
-                    placeholder="Введите Y от -5 до 5"
+                    inputMode="decimal"
+                    placeholder="Введите Y от -3 до 5"
                     value={y}
                     style={showY ? errStyle : undefined}
                     onBlur={() => setTouched((t) => ({ ...t, y: true }))}
-                    onChange={(e) => dispatch(setY(e.target.value))}
+                    onChange={onYChange}
                 />
                 {showY ? <div style={hintStyle}>{errors.y}</div> : null}
             </div>
 
             <div className="field">
                 <label className="label">Координата R:</label>
-                <div
-                    className="row"
-                    role="group"
-                    aria-label="Выбор R"
-                    style={showR ? { padding: "8px", borderRadius: "12px", border: "1px solid #f44336" } : undefined}
+                <select
+                    className="select"
+                    name="r"
+                    required
+                    value={r}
+                    style={showR ? errStyle : undefined}
                     onBlur={() => setTouched((t) => ({ ...t, r: true }))}
+                    onChange={(e) => dispatch(setR(e.target.value))}
                 >
-                    {["1", "1.5", "2", "2.5", "3"].map((val) => (
-                        <label key={val} className="chip">
-                            {val}
-                            <input
-                                type="radio"
-                                name="r"
-                                value={val}
-                                checked={r === val}
-                                onChange={(e) => {
-                                    dispatch(setR(e.target.value));
-                                    setTouched((t) => ({ ...t, r: true }));
-                                }}
-                            />
-                        </label>
+                    <option value="" disabled>
+                        Выбери R
+                    </option>
+                    {Array.from({ length: 9 }, (_, i) => i - 4).map((v) => (
+                        <option key={v} value={String(v)}>
+                            {v}
+                        </option>
                     ))}
-                </div>
+                </select>
                 {showR ? <div style={hintStyle}>{errors.r}</div> : null}
             </div>
 
-            <div className="actions">
-                <button className="btn" type="submit">ПРОВЕРИТЬ ТОЧКУ</button>
-            </div>
+            <button className="btn" type="submit">
+                ПРОВЕРИТЬ ТОЧКУ
+            </button>
         </form>
     );
 }
