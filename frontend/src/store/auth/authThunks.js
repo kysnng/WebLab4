@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { login, me } from "../../api/endpoints";
+import { login, me, logout as logoutApi, register } from "../../api/endpoints";
 import { setAuth, clearAuth } from "./authSlice";
 
 export const loginThunk = createAsyncThunk(
@@ -9,6 +9,17 @@ export const loginThunk = createAsyncThunk(
         dispatch(setAuth({ token: result.token, username }));
     }
 );
+
+export const registerThunk = createAsyncThunk(
+    "auth/register",
+    async ({ username, password }, { dispatch }) => {
+        await register(username, password);
+        const result = await login(username, password);
+        dispatch(setAuth({ token: result.token, username }));
+    }
+);
+
+
 
 export const restoreSessionThunk = createAsyncThunk(
     "auth/restore",
@@ -23,8 +34,6 @@ export const restoreSessionThunk = createAsyncThunk(
         }
     }
 );
-import { logout as logoutApi } from "../../api/endpoints";
-import { clearAuth } from "./authSlice";
 
 export const logoutThunk = createAsyncThunk(
     "auth/logout",
@@ -36,4 +45,3 @@ export const logoutThunk = createAsyncThunk(
         dispatch(clearAuth());
     }
 );
-

@@ -10,9 +10,11 @@ import jakarta.ws.rs.ext.Provider
 class ApiExceptionMapper : ExceptionMapper<Throwable> {
 
     override fun toResponse(exception: Throwable): Response {
-        val (status, msg) = when (exception) {
-            is ApiException -> exception.status to exception.message
-            is IllegalArgumentException -> Response.Status.BAD_REQUEST.statusCode to (exception.message ?: "Bad request")
+        val root = unwrap(exception)
+
+        val (status, msg) = when (root) {
+            is ApiException -> root.status to root.message
+            is IllegalArgumentException -> Response.Status.BAD_REQUEST.statusCode to (root.message ?: "Bad request")
             else -> Response.Status.INTERNAL_SERVER_ERROR.statusCode to "Internal server error"
         }
 
@@ -20,5 +22,16 @@ class ApiExceptionMapper : ExceptionMapper<Throwable> {
             .type(MediaType.APPLICATION_JSON)
             .entity(ErrorDto(msg))
             .build()
+    }
+
+    private fun unwrap(t: Throwable): Throwable {
+        var cur: Throwable = t
+        var guard = 0
+        while (cur.cause != null && cur.cause !== cur && guard < 20) {
+            if (cur is ApiException) return cur
+            cur = cur.cause!!
+            guard++
+        }
+        return if (cur is ApiException) cur else t
     }
 }

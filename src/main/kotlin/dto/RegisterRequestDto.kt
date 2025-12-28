@@ -1,6 +1,6 @@
 package dto
 
 data class RegisterRequestDto(
-    val username: String = "",
-    val password: String = ""
+    var username: String = "",
+    var password: String = ""
 )

@@ -1,4 +1,10 @@
-const API_BASE = "/webLab3/api";
+const contextRoot = (() => {
+    const p = window.location.pathname || "/";
+    const parts = p.split("/").filter(Boolean);
+    return parts.length ? `/${parts[0]}` : "";
+})();
+
+const API_BASE = `${contextRoot}/api`;
 
 export async function httpRequest(url, options = {}, token = null) {
     const headers = {
@@ -6,18 +12,14 @@ export async function httpRequest(url, options = {}, token = null) {
         ...(options.headers || {})
     };
 
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-    }
+    if (token) headers["Authorization"] = `Bearer ${token}`;
 
     const response = await fetch(`${API_BASE}${url}`, {
         ...options,
         headers
     });
 
-    if (response.status === 204) {
-        return null;
-    }
+    if (response.status === 204) return null;
 
     if (!response.ok) {
         let message = "HTTP error";

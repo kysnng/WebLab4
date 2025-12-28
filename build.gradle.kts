@@ -30,6 +30,9 @@ allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.ws.rs.Path")
+    annotation("jakarta.ws.rs.ext.Provider")
+    annotation("jakarta.ejb.Stateless")
 
     annotation("jakarta.ejb.Stateless")
     annotation("jakarta.ejb.Singleton")

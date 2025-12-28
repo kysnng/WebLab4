@@ -3,7 +3,9 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { loginThunk } from "../../store/auth/authThunks";
+import { registerThunk } from "../../store/auth/authThunks";
 import { useSelector } from "react-redux";
+import "../../styles/style.css";
 import { Navigate } from "react-router-dom";
 
 
@@ -22,7 +24,17 @@ export default function LoginPage() {
             await dispatch(loginThunk({ username, password })).unwrap();
             navigate("/app");
         } catch (err) {
-            alert("Ошибка авторизации");
+            alert(err?.message || "Ошибка авторизации");
+        }
+
+    }
+    async function onRegister(e) {
+        e.preventDefault();
+        try {
+            await dispatch(registerThunk({ username, password })).unwrap();
+            navigate("/app");
+        } catch (err) {
+            alert(err?.message || "Ошибка авторизации");
         }
     }
 
@@ -30,30 +42,43 @@ export default function LoginPage() {
         <div className="container">
             <Header />
 
-            <main className="grid">
-                <section className="card">
+            <main className="login-grid">
+                <section className="card login-card">
                     <h2 className="card__title">Авторизация</h2>
 
-                    <form className="form" onSubmit={onSubmit}>
+                    <form className="form login-form" onSubmit={onSubmit}>
                         <div className="field">
                             <label className="label">Логин:</label>
-                            <input className="input" value={username}
-                                   onChange={e => setUsername(e.target.value)} />
+                            <input
+                                className="input"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                            />
                         </div>
 
                         <div className="field">
                             <label className="label">Пароль:</label>
-                            <input className="input" type="password"
-                                   value={password}
-                                   onChange={e => setPassword(e.target.value)} />
+                            <input
+                                className="input"
+                                type="password"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
                         </div>
 
-                        <div className="actions">
-                            <button className="btn">ВОЙТИ</button>
+                        <div className="actions login-actions">
+                            <button className="btn" type="submit">
+                                ВОЙТИ
+                            </button>
+
+                            <button className="btn" type="button" onClick={onRegister}>
+                                ЗАРЕГИСТРИРОВАТЬСЯ
+                            </button>
                         </div>
                     </form>
                 </section>
             </main>
         </div>
     );
+
 }

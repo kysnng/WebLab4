@@ -7,6 +7,21 @@ export function login(username, password) {
     });
 }
 
+export async function register(username, password) {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+    });
+
+    if (res.status === 204) return {};
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || "Register failed");
+    return data;
+}
+
+
+
 export function me(token) {
     return httpRequest("/auth/me", {
         method: "GET"

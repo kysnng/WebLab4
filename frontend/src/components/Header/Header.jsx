@@ -18,7 +18,7 @@ export default function Header() {
         <header className="header">
             <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", alignItems: "flex-start" }}>
                 <div>
-                    <h1 className="header__title">Лабораторная работа 2</h1>
+                    <h1 className="header__title">Лабораторная работа 4</h1>
                     <p className="header__meta">
                         <span><strong>ФИО:</strong> Соловьев Даниил Дмитриевич</span>
                         <span><strong>Группа:</strong> Р3222</span>

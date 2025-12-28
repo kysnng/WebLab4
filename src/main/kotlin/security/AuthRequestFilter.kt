@@ -18,11 +18,13 @@ class AuthRequestFilter : ContainerRequestFilter {
     private lateinit var tokenService: TokenServiceBean
 
     override fun filter(requestContext: ContainerRequestContext) {
-        val path = requestContext.uriInfo.path
+        println("AuthRequestFilter path=" + requestContext.uriInfo.path + " method=" + requestContext.method)
 
+        val path = requestContext.uriInfo.path
+        val p = path.trimStart('/')
         if (requestContext.method.equals("OPTIONS", true)) return
-        if (path.startsWith("auth/login")) return
-        if (path.startsWith("auth/register")) return
+        if (p.endsWith("auth/login")) return
+        if (p.endsWith("auth/register")) return
 
 
         val header = requestContext.getHeaderString("Authorization") ?: run {
