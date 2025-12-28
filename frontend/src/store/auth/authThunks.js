@@ -29,8 +29,10 @@ export const restoreSessionThunk = createAsyncThunk(
         try {
             const info = await me(token);
             dispatch(setAuth({ token, username: info.username }));
-        } catch (_) {
-            dispatch(clearAuth());
+        } catch (e) {
+            if (e && (e.status === 401 || e.status === 403)) {
+                dispatch(clearAuth());
+            }
         }
     }
 );

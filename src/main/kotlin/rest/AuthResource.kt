@@ -10,11 +10,14 @@ import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
-import jakarta.ws.rs.container.ContainerRequestContext
+//import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import service.AuthServiceBean
 import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.SecurityContext
+import exception.ApiException
+import security.AuthPrincipal
 
 @Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -40,10 +43,10 @@ class AuthResource {
 
     @GET
     @Path("/me")
-    fun me(@Context ctx: ContainerRequestContext): MeResponseDto {
-        val userId = (ctx.getProperty("userId") as? Long) ?: throw IllegalStateException("No userId in context")
-        val username = (ctx.getProperty("username") as? String) ?: throw IllegalStateException("No username in context")
-        return auth.me(userId, username)
+    fun me(@Context sc: SecurityContext): MeResponseDto {
+        val p = sc.userPrincipal as? AuthPrincipal
+            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Unauthorized")
+        return auth.me(p.userId, p.username)
     }
 
     @POST

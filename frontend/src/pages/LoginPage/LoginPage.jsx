@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { loginThunk } from "../../store/auth/authThunks";
 import { registerThunk } from "../../store/auth/authThunks";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import "../../styles/style.css";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 
 export default function LoginPage() {
-    const token = useSelector((s) => s.auth.token);
-    if (token) return <Navigate to="/app" replace />;
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 

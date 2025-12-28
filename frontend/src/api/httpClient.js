@@ -24,7 +24,10 @@ export async function httpRequest(url, options = {}, token = null) {
             const body = await response.json();
             message = body.message || message;
         } catch (_) {}
-        throw new Error(message);
+
+        const err = new Error(message);
+        err.status = response.status;
+        throw err;
     }
 
     return response.json();
