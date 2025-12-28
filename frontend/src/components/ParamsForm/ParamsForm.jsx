@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setX, setY, setR } from "../../store/params/ParamsSlice";
+import { setX, setY, setR } from "../../store/params/paramsSlice";
 import { sendPointThunk } from "../../store/results/resultsThunks";
 import { validateParams } from "../../utils/validators";
 
@@ -100,11 +100,13 @@ export default function ParamsForm() {
                     <option value="" disabled>
                         Выбери R
                     </option>
-                    {Array.from({ length: 9 }, (_, i) => i - 4).map((v) => (
-                        <option key={v} value={String(v)}>
-                            {v}
-                        </option>
-                    ))}
+                    {Array.from({ length: 9 }, (_, i) => i - 4)
+                        .filter((v) => v !== 0)
+                        .map((v) => (
+                            <option key={v} value={String(v)}>
+                                {v}
+                            </option>
+                        ))}
                 </select>
                 {showR ? <div style={hintStyle}>{errors.r}</div> : null}
             </div>

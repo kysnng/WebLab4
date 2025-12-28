@@ -22,14 +22,16 @@ export function validateParams({ x, y, r }) {
         if (!Number.isFinite(xn) || !Number.isInteger(xn) || xn < -4 || xn > 4) errors.x = "X должен быть целым от -4 до 4";
     }
 
-    const yRes = parseWithScaleLimit(y, { min: -3, max: 5, maxScale: 3 });
+    const yRes = parseWithScaleLimit(y, { min: -4, max: 4, maxScale: 3 });
     if (!yRes.ok) errors.y = yRes.error;
 
     if (r === "" || r === null || typeof r === "undefined") errors.r = "Выбери R";
     else {
         const rn = Number(String(r).replace(",", "."));
-        if (!Number.isFinite(rn) || !Number.isInteger(rn) || rn < -4 || rn > 4) errors.r = "R должен быть целым от -4 до 4";
-        else if (rn === 0) errors.r = "R не может быть 0";
+        if (!Number.isFinite(rn) || !Number.isInteger(rn) || rn < -4 || rn > 4)
+            errors.r = "R должен быть целым от -4 до 4";
+        else if (rn === 0)
+            errors.r = "R не может быть 0";
     }
 
     const ok = !errors.x && !errors.y && !errors.r;

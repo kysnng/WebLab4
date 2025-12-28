@@ -42,9 +42,6 @@ class AuthRequestFilter : ContainerRequestFilter {
             return
         }
 
-//        requestContext.setProperty("userId", payload.userId)
-//        requestContext.setProperty("username", payload.username)
-
         val original = requestContext.securityContext
         val principal = AuthPrincipal(payload.userId, payload.username)
 
@@ -54,5 +51,8 @@ class AuthRequestFilter : ContainerRequestFilter {
             override fun isSecure(): Boolean = original?.isSecure ?: false
             override fun getAuthenticationScheme(): String = "Bearer"
         }
+
+        requestContext.setProperty("userId", payload.userId)
+        requestContext.setProperty("username", payload.username)
     }
 }
