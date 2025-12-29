@@ -27,7 +27,7 @@ class ResultEntity(
     var hit: Boolean = false,
 
     @Column(name = "exec_time_ms", nullable = false)
-    var execTimeMs: Long = 0,
+    var execTimeMs: Double = 0.0,
 
     @Column(name = "created_at", nullable = false)
     var createdAt: String = LocalDateTime.now().toString()

@@ -27,11 +27,13 @@ class ResultServiceBean {
     fun checkAndSave(userId: Long, req: CheckRequestDto): ResultDto {
         validate(req)
 
+        val t0 = System.nanoTime()
         var hit = false
         val elapsedNs = measureNanoTime {
             hit = area.check(req.x, req.y, req.r)
         }
-        val execMs = elapsedNs / 1_000_000
+        val execMs = (System.nanoTime() - t0) / 1_000_000.0
+
 
         val user = users.findById(userId)
             ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "User not found")
@@ -60,7 +62,7 @@ class ResultServiceBean {
 
 
     private fun validate(req: CheckRequestDto) {
-        if (req.r <= -4.0) throw IllegalArgumentException("R must be > -4")
+        if (req.r < -4.0) throw IllegalArgumentException("R must be > -4")
         if (req.x.isNaN() || req.y.isNaN() || req.r.isNaN()) throw IllegalArgumentException("Invalid numbers")
         if (req.x.isInfinite() || req.y.isInfinite() || req.r.isInfinite()) throw IllegalArgumentException("Invalid numbers")
     }

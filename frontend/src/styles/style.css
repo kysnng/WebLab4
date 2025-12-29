@@ -11,20 +11,22 @@
     --radius:16px;
     --shadow:0 6px 20px rgba(0,0,0,.06);
     --grid:8px;
+    --bp-tablet: 894px;
+    --bp-desktop: 1224px;
 }
 
-/*@font-face {*/
-/*    font-family: 'Advaken Sans';*/
-/*    src: url('../fonts/AdvakenSans.otf') format('opentype');*/
-/*    font-weight: normal;*/
-/*    font-style: normal;*/
-/*}*/
-/*@font-face {*/
-/*    font-family: 'Random Grotesque';*/
-/*    src: url('../fonts/RG-SpaciousBook.ttf') format('opentype');*/
-/*    font-weight: normal;*/
-/*    font-style: normal;*/
-/*}*/
+@font-face {
+    font-family: 'Advaken Sans';
+    src: url('../fonts/AdvakenSans.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Random Grotesque';
+    src: url('../fonts/RG-SpaciousBook.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -419,5 +421,45 @@ tr.miss{background:var(--err)}
 .select:focus{
     border-color:var(--primary) !important;
     box-shadow:0 0 0 3px #5e6167 !important;
+}
+
+@media (min-width: 1224px) {
+    .layout {
+        grid-template-columns: 1fr 420px;
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px;
+    }
+}
+
+@media (min-width: 894px) and (max-width: 1223px) {
+    .layout {
+        grid-template-columns: 1fr 360px;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    canvas#graph {
+        width: 520px;
+        height: 520px;
+    }
+}
+
+@media (max-width: 893px) {
+    .layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    canvas#graph {
+        width: 100%;
+        height: auto;
+    }
+
+    .panel {
+        width: 100%;
+    }
 }
 

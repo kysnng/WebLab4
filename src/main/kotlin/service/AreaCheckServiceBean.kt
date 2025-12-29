@@ -8,9 +8,9 @@ class AreaCheckServiceBean {
 
     fun check(x: Double, y: Double, r: Double): Boolean =
         when {
-            x >= 0.0 && y >= 0.0 -> checkCircle(x, y, r)
-            x <= 0.0 && y <= 0.0 -> checkRectangle(x, y, r)
-            x <= 0.0 && y >= 0.0 -> checkTriangle(x, y, r)
+            x <= 0.0 && y <= 0.0 -> checkCircle(x, y, r)
+            x >= 0.0 && y >= 0.0 -> checkRectangle(x, y, r)
+            x >= 0.0 && y <= 0.0 -> checkTriangle(x, y, r)
             else -> false
         }
 
