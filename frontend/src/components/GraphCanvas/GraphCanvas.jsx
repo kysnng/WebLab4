@@ -6,7 +6,12 @@ function round3(v) {
     return Math.round(v * 1000) / 1000;
 }
 
-function canvasToCoord(canvas, clientX, clientY, r) {
+function toNumber(v) {
+    const n = Number(String(v ?? "").replace(",", "."));
+    return Number.isFinite(n) ? n : NaN;
+}
+
+function canvasToCoord(canvas, clientX, clientY, rAbs) {
     const rect = canvas.getBoundingClientRect();
     const xPx = clientX - rect.left;
     const yPx = clientY - rect.top;
@@ -14,7 +19,7 @@ function canvasToCoord(canvas, clientX, clientY, r) {
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
 
-    const scale = 200 / r;
+    const scale = 200 / rAbs;
 
     const x = (xPx - cx) / scale;
     const y = (cy - yPx) / scale;
@@ -22,7 +27,7 @@ function canvasToCoord(canvas, clientX, clientY, r) {
     return { x: round3(x), y: round3(y) };
 }
 
-function draw(ctx, canvas, r, items) {
+function draw(ctx, canvas, rAbs, items) {
     const w = canvas.width;
     const h = canvas.height;
     const cx = w / 2;
@@ -57,17 +62,17 @@ function draw(ctx, canvas, r, items) {
     ctx.closePath();
     ctx.fill();
 
-    const scale = 200 / r;
+    const scale = 200 / rAbs;
 
-    const xR = cx + scale * r;
-    const xR2 = cx + scale * (r / 2);
-    const xNegR = cx - scale * r;
-    const xNegR2 = cx - scale * (r / 2);
+    const xR = cx + scale * rAbs;
+    const xR2 = cx + scale * (rAbs / 2);
+    const xNegR = cx - scale * rAbs;
+    const xNegR2 = cx - scale * (rAbs / 2);
 
-    const yR = cy - scale * r;
-    const yR2 = cy - scale * (r / 2);
-    const yNegR = cy + scale * r;
-    const yNegR2 = cy + scale * (r / 2);
+    const yR = cy - scale * rAbs;
+    const yR2 = cy - scale * (rAbs / 2);
+    const yNegR = cy + scale * rAbs;
+    const yNegR2 = cy + scale * (rAbs / 2);
 
     function tick(x1, y1, x2, y2) {
         ctx.beginPath();
@@ -100,30 +105,23 @@ function draw(ctx, canvas, r, items) {
     ctx.fillText("Y", cx + 10, 10);
 
     ctx.fillStyle = "rgba(0,255,84,0.14)";
-    ctx.fillRect(
-        cx,
-        cy - r * scale,
-        (r / 2) * scale,
-        r * scale
-    );
+    ctx.fillRect(cx, cy - rAbs * scale, (rAbs / 2) * scale, rAbs * scale);
 
     ctx.fillStyle = "rgba(0,60,255,0.15)";
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx, cy + r * scale);
-    ctx.lineTo(cx + (r / 2) * scale, cy);
+    ctx.lineTo(cx, cy + rAbs * scale);
+    ctx.lineTo(cx + (rAbs / 2) * scale, cy);
     ctx.closePath();
     ctx.fill();
 
-
     ctx.fillStyle = "rgba(255,0,0,0.16)";
-    const rad = (r / 2) * scale;
+    const rad = (rAbs / 2) * scale;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, rad, Math.PI / 2, Math.PI, false);
     ctx.closePath();
     ctx.fill();
-
 
     for (const row of items) {
         const px = cx + row.x * scale;
@@ -139,7 +137,7 @@ function draw(ctx, canvas, r, items) {
 export default function GraphCanvas() {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
-    const r = useSelector((s) => s.params.r);
+    const rRaw = useSelector((s) => s.params.r);
     const items = useSelector((s) => s.results.items);
 
     useEffect(() => {
@@ -148,23 +146,24 @@ export default function GraphCanvas() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const rNum = Number(r);
-        const effectiveR = Number.isFinite(rNum) && rNum > 0 ? rNum : 1;
+        const rNum = toNumber(rRaw);
+        const absR = Number.isFinite(rNum) && rNum !== 0 ? Math.abs(rNum) : 1;
 
-        draw(ctx, canvas, effectiveR, items);
-    }, [items, r]);
+        draw(ctx, canvas, absR, items);
+    }, [items, rRaw]);
 
     async function onClick(e) {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const rNum = Number(r);
-        if (!Number.isFinite(rNum) || rNum <= 0) {
+        const rNum = toNumber(rRaw);
+        if (!Number.isFinite(rNum) || rNum === 0) {
             alert("Выбери R");
             return;
         }
 
-        const { x, y } = canvasToCoord(canvas, e.clientX, e.clientY, rNum);
+        const absR = Math.abs(rNum);
+        const { x, y } = canvasToCoord(canvas, e.clientX, e.clientY, absR);
 
         try {
             await dispatch(sendPointThunk({ x, y, r: rNum })).unwrap();

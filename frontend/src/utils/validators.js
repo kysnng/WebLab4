@@ -22,7 +22,7 @@ export function validateParams({ x, y, r }) {
         if (!Number.isFinite(xn) || !Number.isInteger(xn) || xn < -4 || xn > 4) errors.x = "X должен быть целым от -4 до 4";
     }
 
-    const yRes = parseWithScaleLimit(y, { min: -4, max: 4, maxScale: 3 });
+    const yRes = parseWithScaleLimit(y, { min: -3, max: 5, maxScale: 3 });
     if (!yRes.ok) errors.y = yRes.error;
 
     if (r === "" || r === null || typeof r === "undefined") errors.r = "Выбери R";

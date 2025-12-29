@@ -8,5 +8,5 @@ data class ResultDto(
     val r: Double,
     val hit: Boolean,
     val execTimeMs: Long,
-    val createdAt: LocalDateTime
+    val createdAt: String
 )

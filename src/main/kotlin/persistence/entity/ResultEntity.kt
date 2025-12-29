@@ -30,5 +30,5 @@ class ResultEntity(
     var execTimeMs: Long = 0,
 
     @Column(name = "created_at", nullable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    var createdAt: String = LocalDateTime.now().toString()
 )

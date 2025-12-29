@@ -43,7 +43,7 @@ class ResultServiceBean {
             r = req.r,
             hit = hit,
             execTimeMs = execMs,
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now().toString()
         )
 
         results.persist(entity)

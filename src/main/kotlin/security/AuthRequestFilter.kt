@@ -9,38 +9,65 @@ import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.core.SecurityContext
 import jakarta.ws.rs.ext.Provider
 import java.security.Principal
+import java.util.logging.Level
+import java.util.logging.Logger
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 class AuthRequestFilter : ContainerRequestFilter {
 
+    private val log = Logger.getLogger(AuthRequestFilter::class.java.name)
+
     @Inject
     private lateinit var tokenService: TokenServiceBean
 
     override fun filter(requestContext: ContainerRequestContext) {
-        println("AuthRequestFilter path=" + requestContext.uriInfo.path + " method=" + requestContext.method)
-
         val path = requestContext.uriInfo.path
+        val method = requestContext.method
+
+        log.info("AUTH FILTER IN  method=$method path=/$path")
+
         val p = path.trimStart('/')
-        if (requestContext.method.equals("OPTIONS", true)) return
-        if (p.endsWith("auth/login")) return
-        if (p.endsWith("auth/register")) return
 
+        if (method.equals("OPTIONS", true)) {
+            log.fine("AUTH FILTER SKIP (OPTIONS)")
+            return
+        }
 
-        val header = requestContext.getHeaderString("Authorization") ?: run {
+        if (p.endsWith("auth/login") || p.endsWith("auth/register")) {
+            log.fine("AUTH FILTER SKIP (public endpoint: $p)")
+            return
+        }
+
+        val header = requestContext.getHeaderString("Authorization")
+        if (header == null) {
+            log.warning("AUTH FILTER FAIL: Authorization header is missing")
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build())
             return
         }
 
-        val token = header.removePrefix("Bearer ").takeIf { it != header } ?: run {
+        val token = header.removePrefix("Bearer ").takeIf { it != header }
+        if (token == null) {
+            log.warning("AUTH FILTER FAIL: Authorization is not Bearer")
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build())
             return
         }
 
-        val payload = tokenService.verify(token) ?: run {
+        val payload = try {
+            log.fine("AUTH FILTER: verifying token...")
+            tokenService.verify(token)
+        } catch (e: Exception) {
+            log.log(Level.SEVERE, "AUTH FILTER ERROR: tokenService.verify threw exception", e)
+            null
+        }
+
+        if (payload == null) {
+            log.warning("AUTH FILTER FAIL: token verification failed")
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build())
             return
         }
+
+        log.info("AUTH FILTER OK: userId=${payload.userId}, username=${payload.username}")
 
         val original = requestContext.securityContext
         val principal = AuthPrincipal(payload.userId, payload.username)
