@@ -59,16 +59,16 @@ class AuthServiceBean {
         val password = req.password
 
         if (username.isEmpty() || password.isEmpty()) {
-            throw ApiException(Response.Status.BAD_REQUEST.statusCode, "Username and password are required")
+            throw ApiException(Response.Status.BAD_REQUEST.statusCode, "Требуется имя и пароль...")
         }
 
         val user = users.findByUsername(username)
-            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Invalid username")
+            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Нет такого пользователя...")
 
         val computed = PasswordHasher.hashWithSalt(password, user.salt)
 
         if (computed != user.passwordHash) {
-            throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Invalid password")
+            throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Неверный пароль. Попробуйте снова...")
         }
 
         val token = tokens.issue(user.id!!, user.username)
