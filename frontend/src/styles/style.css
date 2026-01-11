@@ -442,7 +442,7 @@ tr.miss{background:var(--err)}
     box-shadow:0 0 0 3px #5e6167 !important;
 }
 
-@media (min-width: 1224px) {
+/*@media (min-width: 1224px) {
     .layout {
         grid-template-columns: 1fr 420px;
         gap: 24px;
@@ -470,5 +470,5 @@ tr.miss{background:var(--err)}
     .panel {
         width: 100%;
     }
-}
+}*/
 
