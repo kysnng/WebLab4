@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { login, me, logout as logoutApi, register } from "../../api/endpoints";
+import { login, me, register } from "../../api/endpoints";
 import { setAuth, clearAuth } from "./authSlice";
 
 export const loginThunk = createAsyncThunk(
@@ -39,11 +39,7 @@ export const restoreSessionThunk = createAsyncThunk(
 
 export const logoutThunk = createAsyncThunk(
     "auth/logout",
-    async (_, { getState, dispatch }) => {
-        const token = getState().auth.token;
-        try {
-            if (token) await logoutApi(token);
-        } catch (_) {}
-        dispatch(clearAuth());
+    async (_, { dispatch }) => {
+        dispatch(clearAuth())
     }
 );

@@ -35,7 +35,7 @@ class AuthServiceBean {
             throw ApiException(Response.Status.BAD_REQUEST.statusCode, "Username is too short")
         }
 
-        if (password.length < 4) {
+        if (password.length < 3) {
             throw ApiException(Response.Status.BAD_REQUEST.statusCode, "Password is too short")
         }
 
@@ -85,6 +85,5 @@ class AuthServiceBean {
     fun me(userId: Long, username: String): dto.MeResponseDto =
         dto.MeResponseDto(userId = userId, username = username)
 
-    fun logout(): Unit = Unit
 
 }

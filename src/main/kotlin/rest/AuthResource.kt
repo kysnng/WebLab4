@@ -48,10 +48,4 @@ class AuthResource {
         return auth.me(p.userId, p.username)
     }
 
-    @POST
-    @Path("/logout")
-    fun logout(): Response {
-        auth.logout()
-        return Response.ok().build()
-    }
 }

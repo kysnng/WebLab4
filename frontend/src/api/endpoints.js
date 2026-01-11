@@ -29,12 +29,6 @@ export function me(token) {
     }, token);
 }
 
-export function logout(token) {
-    return httpRequest("/auth/logout", {
-        method: "POST"
-    }, token);
-}
-
 export function sendPoint(data, token) {
     return httpRequest("/area/check", {
         method: "POST",
