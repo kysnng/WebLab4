@@ -122,6 +122,7 @@ body{
 .form{
     display:grid;
     gap:16px;
+    flex: 1;
     /*min-height: 623px;*/
 }
 .field{display:grid; gap:8px}
