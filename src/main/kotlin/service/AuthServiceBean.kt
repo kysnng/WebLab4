@@ -3,6 +3,7 @@ package service
 import dto.LoginRequestDto
 import dto.LoginResponseDto
 import dto.RegisterRequestDto
+import dto.RegisterResponseDto
 import exception.ApiException
 import jakarta.ejb.Stateless
 import jakarta.inject.Inject
@@ -22,7 +23,7 @@ class AuthServiceBean {
     @Inject
     private lateinit var tokens: TokenServiceBean
 
-    fun register(req: RegisterRequestDto) {
+    fun register(req: RegisterRequestDto) : RegisterResponseDto {
         val username = req.username.trim()
         val password = req.password
 
@@ -45,12 +46,19 @@ class AuthServiceBean {
         val salt = SaltGenerator.generate()
         val hash = PasswordHasher.hashWithSalt(password, salt)
 
-        users.persist(
-            UserEntity(
-                username = username,
-                passwordHash = hash,
-                salt = salt
-            )
+        val user = UserEntity(
+            username = username,
+            passwordHash = hash,
+            salt = salt
+        )
+
+        users.persist(user)
+
+        val token = tokens.issue(user.id!!, user.username)
+
+        return RegisterResponseDto(
+            token = token,
+            username = user.username
         )
     }
 
@@ -59,16 +67,16 @@ class AuthServiceBean {
         val password = req.password
 
         if (username.isEmpty() || password.isEmpty()) {
-            throw ApiException(Response.Status.BAD_REQUEST.statusCode, "Требуется имя и пароль...")
+            throw ApiException(Response.Status.BAD_REQUEST.statusCode, "Требуется имя и пароль")
         }
 
         val user = users.findByUsername(username)
-            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Нет такого пользователя...")
+            ?: throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Нет такого пользователя")
 
         val computed = PasswordHasher.hashWithSalt(password, user.salt)
 
         if (computed != user.passwordHash) {
-            throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Неверный пароль. Попробуйте снова...")
+            throw ApiException(Response.Status.UNAUTHORIZED.statusCode, "Неверный пароль. Попробуйте снова")
         }
 
         val token = tokens.issue(user.id!!, user.username)

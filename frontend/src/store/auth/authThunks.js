@@ -13,11 +13,11 @@ export const loginThunk = createAsyncThunk(
 export const registerThunk = createAsyncThunk(
     "auth/register",
     async ({ username, password }, { dispatch }) => {
-        await register(username, password);
-        const result = await login(username, password);
-        dispatch(setAuth({ token: result.token, username }));
+        const result = await register(username, password)
+        dispatch(setAuth({ token: result.token, username: result.username }))
     }
 );
+
 
 
 

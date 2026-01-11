@@ -1,38 +1,65 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header/Header";
-import { loginThunk } from "../../store/auth/authThunks";
-import { registerThunk } from "../../store/auth/authThunks";
-// import { useSelector } from "react-redux";
-import "../../styles/style.css";
-// import { Navigate } from "react-router-dom";
-
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import Header from "../../components/Header/Header"
+import { loginThunk } from "../../store/auth/authThunks"
+import { registerThunk } from "../../store/auth/authThunks"
+import "../../styles/style.css"
 
 export default function LoginPage() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    async function onSubmit(e) {
-        e.preventDefault();
-        try {
-            await dispatch(loginThunk({ username, password })).unwrap();
-            navigate("/app");
-        } catch (err) {
-            alert(err?.message || "Ошибка авторизации");
+    const validateCredentials = (login, password) => {
+        if (!login || !password) {
+            return "Логин и пароль не могут быть пустыми"
         }
 
+        if (login.length < 3 || login.length > 30) {
+            return "Длина логина должна быть от 3 до 30 символов"
+        }
+
+        if (password.length < 3 || password.length > 30) {
+            return "Длина пароля должна быть от 3 до 30 символов"
+        }
+
+        return null
     }
-    async function onRegister(e) {
-        e.preventDefault();
+
+    async function onSubmit(e) {
+        e.preventDefault()
+
+        const validationError = validateCredentials(username, password)
+        if (validationError) {
+            alert(validationError)
+            return
+        }
+
         try {
-            await dispatch(registerThunk({ username, password })).unwrap();
-            navigate("/app");
+            await dispatch(loginThunk({ username, password })).unwrap()
+            navigate("/app")
         } catch (err) {
-            alert(err?.message || "Ошибка авторизации");
+            alert(err?.message || "Ошибка авторизации")
+        }
+    }
+
+    async function onRegister(e) {
+        e.preventDefault()
+
+        const validationError = validateCredentials(username, password)
+        if (validationError) {
+            alert(validationError)
+            return
+        }
+
+        try {
+            await dispatch(registerThunk({ username, password })).unwrap()
+            navigate("/app")
+        } catch (err) {
+            alert(err?.message || "Ошибка авторизации")
         }
     }
 
@@ -69,7 +96,11 @@ export default function LoginPage() {
                                 ВОЙТИ
                             </button>
 
-                            <button className="btn" type="button" onClick={onRegister}>
+                            <button
+                                className="btn"
+                                type="button"
+                                onClick={onRegister}
+                            >
                                 ЗАРЕГИСТРИРОВАТЬСЯ
                             </button>
                         </div>
@@ -77,6 +108,5 @@ export default function LoginPage() {
                 </section>
             </main>
         </div>
-    );
-
+    )
 }

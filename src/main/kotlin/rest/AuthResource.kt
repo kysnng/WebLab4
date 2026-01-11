@@ -4,6 +4,7 @@ import dto.LoginRequestDto
 import dto.LoginResponseDto
 import dto.MeResponseDto
 import dto.RegisterRequestDto
+import dto.RegisterResponseDto
 import jakarta.inject.Inject
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.GET
@@ -29,10 +30,8 @@ class AuthResource {
 
     @POST
     @Path("/register")
-    fun register(req: RegisterRequestDto): Response {
+    fun register(req: RegisterRequestDto): RegisterResponseDto =
         auth.register(req)
-        return Response.status(Response.Status.CREATED).build()
-    }
 
     @POST
     @Path("/login")

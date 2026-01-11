@@ -15,7 +15,7 @@ export async function register(username, password) {
         body: JSON.stringify({ username, password })
     });
 
-    if (res.status === 204) return {};
+    // if (res.status === 204) return {};
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.message || "Register failed");
     return data;
