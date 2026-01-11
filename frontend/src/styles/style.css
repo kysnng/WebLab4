@@ -441,16 +441,6 @@ tr.miss{background:var(--err)}
     box-shadow:0 0 0 3px #5e6167 !important;
 }
 
-.full-width{
-    width:100vw;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
-}
-
-.full-width.card{
-    border-radius:var(--radius);
-}
-
 @media (min-width: 1224px) {
     .layout {
         grid-template-columns: 1fr 420px;
