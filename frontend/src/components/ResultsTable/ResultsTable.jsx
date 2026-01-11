@@ -20,33 +20,35 @@ export default function ResultsTable() {
                 </button>
             </div>
 
-            <table aria-label="История попаданий">
-                <thead>
-                <tr>
-                    <th style={{ textAlign: "center" }}>Результат</th>
-                    <th style={{ textAlign: "center" }}>X</th>
-                    <th style={{ textAlign: "center" }}>Y</th>
-                    <th style={{ textAlign: "center" }}>R</th>
-                    <th style={{ textAlign: "center" }}>Время</th>
-                    <th style={{ textAlign: "center" }}>Создано</th>
-                </tr>
-                </thead>
-                <tbody id="results-body">
-                {items.map((row, idx) => (
-                    <tr
-                        key={`${row.createdAt}-${row.x}-${row.y}-${row.r}-${idx}`}
-                        className={row.hit ? "hit" : "miss"}
-                    >
-                        <td>{row.hit ? "Попадание" : "Промах"}</td>
-                        <td>{row.x}</td>
-                        <td>{row.y}</td>
-                        <td>{row.r}</td>
-                        <td>{row.execTimeMs} ms</td>
-                        <td>{formatDateTime(row.createdAt)}</td>
+            <div className="table-scroll">
+                <table aria-label="История попаданий">
+                    <thead>
+                    <tr>
+                        <th style={{ textAlign: "center" }}>Результат</th>
+                        <th style={{ textAlign: "center" }}>X</th>
+                        <th style={{ textAlign: "center" }}>Y</th>
+                        <th style={{ textAlign: "center" }}>R</th>
+                        <th style={{ textAlign: "center" }}>Время</th>
+                        <th style={{ textAlign: "center" }}>Создано</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody id="results-body">
+                    {items.map((row, idx) => (
+                        <tr
+                            key={`${row.createdAt}-${row.x}-${row.y}-${row.r}-${idx}`}
+                            className={row.hit ? "hit" : "miss"}
+                        >
+                            <td>{row.hit ? "Попадание" : "Промах"}</td>
+                            <td>{row.x}</td>
+                            <td>{row.y}</td>
+                            <td>{row.r}</td>
+                            <td>{row.execTimeMs} ms</td>
+                            <td>{formatDateTime(row.createdAt)}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
