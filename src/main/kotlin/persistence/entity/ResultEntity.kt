@@ -26,7 +26,7 @@ class ResultEntity(
     @Column(name = "hit", nullable = false)
     var hit: Boolean = false,
 
-    @Column(name = "exec_time_ms", nullable = false)
+    @Column(name = "exec_time_ms", nullable = false, columnDefinition = "DOUBLE")
     var execTimeMs: Double = 0.0,
 
     @Column(name = "created_at", nullable = false)
