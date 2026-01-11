@@ -441,6 +441,16 @@ tr.miss{background:var(--err)}
     box-shadow:0 0 0 3px #5e6167 !important;
 }
 
+.full-width{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+}
+
+.full-width.card{
+    border-radius:var(--radius);
+}
+
 @media (min-width: 1224px) {
     .layout {
         grid-template-columns: 1fr 420px;
@@ -457,11 +467,6 @@ tr.miss{background:var(--err)}
         gap: 20px;
         padding: 20px;
     }
-
-    canvas#graph {
-        width: 520px;
-        height: 520px;
-    }
 }
 
 @media (max-width: 970px) {
@@ -469,11 +474,6 @@ tr.miss{background:var(--err)}
         grid-template-columns: 1fr;
         gap: 16px;
         padding: 16px;
-    }
-
-    canvas#graph {
-        width: 100%;
-        height: auto;
     }
 
     .panel {
